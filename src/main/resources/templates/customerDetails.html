@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Details</title>
+</head>
+<body>
+<h1>Customer Details</h1>
+<div>
+    Customer: <span th:text="${customer.getLastname()} + ', '
+    + ${customer.getFirstname()} + ' ('
+    + ${customer.getGender()} + ') '
+    + ${customer.getBirthdate()}"></span>
+    <br>
+    Address: <span th:text="${customer.getAddress().getStreetname()} + ' '
+    + ${customer.getAddress().getStreetNumber()} + ', '
+    + ${customer.getAddress().getZipCode()} + ' '
+    + ${customer.getAddress().getCity()}"></span>
+    <br>
+    Giro Accounts:
+    <table th:border="1">
+        <thead>
+            <tr>
+                <th>number</th>
+                <th>balance</th>
+                <th>overdraft-limit</th>
+                <th>debit</th>
+                <th>credit</th>
+                <th>amount</th>
+                <th>update</th>
+            </tr>
+        </thead>
+        <tbody th:each="acc : ${customer.accounts}">
+            <tr th:if="${acc instanceof T(com.example.exa_103_springboot_jpa_bankdb.pojos.GiroAccount)}">
+                <form method="POST" th:action="@{/details/update}">
+                    <td th:text="${acc.accountNumber}"></td>
+                    <input type="hidden" th:value="${acc.accountId}" name="accountId"/>
+                    <td th:text="${#numbers.formatCurrency(acc.balance)}"></td>
+                    <td th:text="${#numbers.formatCurrency(acc.overdraft)}"></td>
+                    <td th:text="${acc.debitInterest} + ' %'"></td>
+                    <td th:text="${acc.creditInterest} + ' %'"></td>
+                    <td><input type="number" th:name="amount" th:value="0.0"/></td>
+                    <td>
+                        <button type="submit" th:name="action" th:value="1">+</button>
+                        <button type="submit" th:name="action" th:value="-1">-</button>
+                    </td>
+                </form>
+            </tr>
+        </tbody>
+    </table>
+    Savings Accounts:
+    <table th:border="1">
+        <thead>
+            <tr>
+                <th>number</th>
+                <th>balance</th>
+                <th>interest</th>
+                <th>amount</th>
+                <th>update</th>
+            </tr>
+        </thead>
+        <tbody th:each="acc : ${customer.getAccounts()}">
+            <tr th:if="${account instanceof T(com.example.exa_103_springboot_jpa_bankdb.pojos.SavingsAccount)}">
+                <form method="POST" action="/details/update">
+                    <td th:text="${acc.accountNumber}"></td>
+                    <input type="hidden" th:value="${acc.accountId}" th:name="accountId" />
+                    <td th:text="${#numbers.formatCurrency(acc.balance)}"></td>
+                    <td th:text="${acc.interest} + ' %'"></td>
+                    <td><input type="number" th:name="amount" th:value="0.0"/></td>
+                    <td>
+                        <button type="submit" th:name="action" th:value="1">+</button>
+                        <button type="submit" th:name="action" th:value="-1">-</button>
+                    </td>
+                </form>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

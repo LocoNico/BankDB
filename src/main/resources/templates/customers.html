@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Bank DB</title>
+</head>
+<body>
+<h1>Customer Selection</h1>
+<form th:action="@{/customer}" method="post" th:object="${customers}">
+    Lastname: <input type="text" name="lastname">
+</form>
+
+<form th:action="@{/details}" method="post">
+    <div th:if="${customers != null}">
+        Customers found: <span th:text="${customers.size()}"></span>
+        <div th:each="customer : ${customers}">
+            <input type="radio" name="customer" th:value="${customer.getCustomerId()}" th:text="${customer.getLastname()} + ' ,' + ${customer.getFirstname()}">
+        </div>
+
+        <button type="submit">show customer details</button>
+    </div>
+</form>
+
+</body>
+</html>
